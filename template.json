@@ -1,7 +1,5 @@
-{
-    "project_name": "test_tech_deepdil",
-    "structure":{
-        "src":["main.py", "utils.py"],
-        "docs":["readme.txt"]
-    }
+{ "project_name": "mon-app",
+ "structure": 
+ { "src": ["main.js", "utils.js"], 
+ "tests": ["main.test.js"] } 
 }
