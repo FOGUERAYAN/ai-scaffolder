@@ -1,0 +1,7 @@
+{
+    "project_name": "test_tech_deepdil",
+    "structure":{
+        "src":["main.py", "utils.py"],
+        "docs":["readme.txt"]
+    }
+}
