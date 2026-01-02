@@ -1,7 +1,16 @@
 {
-    "project_name": "test_tech_deepdil",
-    "structure":{
-        "src":["main.py", "utils.py"],
-        "docs":["readme.txt"]
+    "project_name": "api-fastapi-docker",
+    "structure": {
+        "app": [
+            "main.py"
+        ],
+        "Docker": {
+            "api": [
+                "Dockerfile"
+            ],
+            "scripts": [
+                "start.sh"
+            ]
+        }
     }
 }

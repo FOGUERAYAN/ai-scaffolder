@@ -10,6 +10,7 @@ import json
 import time
 from pathlib import Path
 from typing import Optional
+from ai import generate_template_from_prompt
 
 # Configuration de l'application avec des métadonnées
 app = typer.Typer(
@@ -110,14 +111,35 @@ def version():
     typer.echo("AI Scaffolder v1.0.0 - (c) 2026 Rayan FOGUE")
 
 
-# --- FUTURES COMMANDES IA (Placeholders) ---
-
 @app.command()
-def suggest(description: str):
+def suggest(
+    description: str = typer.Argument(..., help="Description du projet souhaité (ex: 'Site React avec Tailwind')"),
+    output: str = typer.Option("template.json", "--output", "-o", help="Fichier de sortie pour le template")
+):
     """
-    [ÉTAPE 2] Suggère une structure de projet via l'IA (À implémenter).
+    [ÉTAPE 2] Génère un template JSON de projet basé sur une description utilisateur via l'IA.
     """
-    typer.secho(" Fonctionnalité 'Suggest' en cours de développement...", fg=typer.colors.MAGENTA)
+    typer.secho(f" L'IA réfléchit à ton projet : '{description}'...", fg=typer.colors.MAGENTA)
+    
+    # Appel à l'IA (src/ai.py)
+    with typer.progressbar(range(100), label="Génération") as progress:
+        template_data = generate_template_from_prompt(description)
+        progress.update(100)
+
+    if not template_data:
+        typer.secho(" Échec de la génération IA.", fg=typer.colors.RED)
+        raise typer.Exit(1)
+
+    # Sauvegarde du résultat
+    output_path = Path(output)
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(template_data, f, indent=4)
+
+    typer.secho(f"\n Template généré avec succès : {output_path}", fg=typer.colors.GREEN)
+    typer.echo("Tu peux maintenant lancer la commande :")
+    typer.secho(f"python src/main.py scaffold {output_path}", fg=typer.colors.CYAN, bold=True)
+
+# --- FUTURE COMMANDE IA (Placeholders) ---
 
 @app.command()
 def vibe(instructions: str):
