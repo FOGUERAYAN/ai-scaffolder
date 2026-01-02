@@ -39,10 +39,10 @@ L'architecture du projet respecte la séparation des responsabilités (Logique M
 | :--- | :--- | :--- |
 | `src/main.py` | **Point d'Entrée** | Interface CLI gérée avec `Typer`. Orchestre les commandes et gère les E/S fichiers. |
 | `src/ai.py` | **Module Logique** | Encapsulation de l'API OpenAI. Contient les "System Prompts" et la gestion des erreurs API. |
-| `ai-meta/` | **Documentation** | Trace des prompts utilisés pour instruire l'IA (requis pour l'évaluation). |
+| `ai-meta/` | **Documentation** | Trace des prompts utilisés pour instruire l'IA. |
 | `assets/` | **Ressources** | Captures d'écran et éléments visuels pour le rapport de fonctionnement. |
 | `template.json` | **Configuration** | Modèle de référence pour la structure des projets générés. |
-| `.env` | **Sécurité** | Fichier de configuration locale pour la clé API (exclu du versionning Git). |
+| `.env` | **Sécurité** | Fichier de configuration locale pour la clé API (exclu du versionning Git, car contient ma clé d'API privé). |
 | `requirements.txt` | **Dépendances** | Liste des librairies Python requises (`typer`, `openai`, `python-dotenv`). |
 
 ---
