@@ -10,7 +10,8 @@ import json
 import time
 from pathlib import Path
 from typing import Optional
-from ai import generate_template_from_prompt
+from ai import generate_template_from_prompt, vibe_check
+from typing import List
 
 # Configuration de l'application avec des métadonnées
 app = typer.Typer(
@@ -139,14 +140,55 @@ def suggest(
     typer.echo("Tu peux maintenant lancer la commande :")
     typer.secho(f"python src/main.py scaffold {output_path}", fg=typer.colors.CYAN, bold=True)
 
-# --- FUTURE COMMANDE IA (Placeholders) ---
 
 @app.command()
-def vibe(instructions: str):
+def vibe(
+    instructions_file: str = typer.Argument(..., help="Fichier contenant les instructions (ex: refacto.md)"),
+    files: List[Path] = typer.Option(..., "--in", "-i", help="Liste des fichiers à traiter"),
+    output_file: str = typer.Option("review.md", "--out", "-o", help="Fichier de sortie")
+):
     """
-    [ÉTAPE 3] Vibe Coding : Modification de fichiers par IA (À implémenter).
+    [ÉTAPE 3] Vibe Coding : Analyse ou transforme des fichiers via l'IA.
     """
-    typer.secho(" Fonctionnalité 'Vibe' en cours de développement...", fg=typer.colors.MAGENTA)
+    # 1. Lecture des instructions
+    inst_path = Path(instructions_file)
+    if not inst_path.exists():
+        typer.secho(f" Erreur : Fichier d'instructions '{instructions_file}' introuvable.", fg=typer.colors.RED)
+        raise typer.Exit(1)
+    
+    with open(inst_path, "r", encoding="utf-8") as f:
+        instructions_text = f.read()
+
+    # 2. Lecture des fichiers sources (--in)
+    files_content = {}
+    typer.secho(f" Lecture de {len(files)} fichier(s)...", fg=typer.colors.CYAN)
+    
+    for file_path in files:
+        if not file_path.exists():
+            typer.secho(f"  Attention : Le fichier {file_path} n'existe pas (ignoré).", fg=typer.colors.YELLOW)
+            continue
+        
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                files_content[file_path.name] = f.read()
+        except Exception as e:
+            typer.secho(f" Erreur lecture {file_path.name}: {e}", fg=typer.colors.RED)
+
+    if not files_content:
+        typer.secho(" Aucun fichier valide à traiter.", fg=typer.colors.RED)
+        raise typer.Exit(1)
+
+    # 3. Appel à l'IA
+    typer.secho(" Analyse IA en cours (Vibe Check)...", fg=typer.colors.MAGENTA, blink=True)
+    
+    result = vibe_check(instructions_text, files_content)
+
+    # 4. Écriture du résultat
+    out_path = Path(output_file)
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(result)
+
+    typer.secho(f"\n Terminé ! Résultat sauvegardé dans : {out_path}", fg=typer.colors.GREEN, bold=True)
 
 
 if __name__ == "__main__":

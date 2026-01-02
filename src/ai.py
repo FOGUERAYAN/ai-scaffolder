@@ -67,3 +67,52 @@ def generate_template_from_prompt(user_description: str) -> dict:
     except Exception as e:
         print(f" Erreur OpenAI : {e}")
         return None
+
+def vibe_check(instructions: str, files_content: dict) -> str:
+    """
+    Envoie le code et les instructions à l'IA pour transformation.
+    """
+    client = get_ai_client()
+    
+    # Préparation du contexte des fichiers
+    files_context = ""
+    for filename, content in files_content.items():
+        files_context += f"\n--- FICHIER: {filename} ---\n{content}\n"
+
+    # Si pas de clé API (Mode Mock)
+    if not client:
+        return f"# RÉSULTAT SIMULÉ\n\nJ'ai bien reçu tes instructions : '{instructions}'\nSur les fichiers : {list(files_content.keys())}"
+
+    system_prompt = """
+    Tu es un Tech Lead expert en Clean Code et Refactoring.
+    Ton but est d'appliquer les instructions de l'utilisateur sur les fichiers fournis.
+    
+    Format de réponse attendu :
+    - Si l'utilisateur demande une review : Donne une liste de points d'amélioration (Markdown).
+    - Si l'utilisateur demande du code : Renvoie le code corrigé complet.
+    - Sois concis, professionnel et pédagogique.
+    """
+
+    user_message = f"""
+    INSTRUCTIONS :
+    {instructions}
+
+    CONTENU DES FICHIERS :
+    {files_context}
+    
+    Réponds maintenant.
+    """
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_message}
+            ],
+            temperature=0.3 
+        )
+        return response.choices[0].message.content.strip()
+
+    except Exception as e:
+        return f" Erreur lors du Vibe Coding : {e}"

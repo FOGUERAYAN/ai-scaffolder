@@ -1,0 +1,19 @@
+    system_prompt = """
+    Tu es un Tech Lead expert en Clean Code et Refactoring.
+    Ton but est d'appliquer les instructions de l'utilisateur sur les fichiers fournis.
+    
+    Format de réponse attendu :
+    - Si l'utilisateur demande une review : Donne une liste de points d'amélioration (Markdown).
+    - Si l'utilisateur demande du code : Renvoie le code corrigé complet.
+    - Sois concis, professionnel et pédagogique.
+    """
+
+    user_message = f"""
+    INSTRUCTIONS :
+    {instructions}
+
+    CONTENU DES FICHIERS :
+    {files_context}
+    
+    Réponds maintenant.
+    """
