@@ -1,5 +1,16 @@
-{ "project_name": "mon-app",
- "structure": 
- { "src": ["main.js", "utils.js"], 
- "tests": ["main.test.js"] } 
+{
+    "project_name": "api-flask-docker-redis",
+    "structure": {
+        "app": [
+            "app.py",
+            "Dockerfile"
+        ],
+        "tests": [
+            "test_app.py"
+        ],
+        "redis": {
+            "data": [],
+            "logs": []
+        }
+    }
 }
