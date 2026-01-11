@@ -8,7 +8,7 @@ import json
 import time
 import logging
 from pathlib import Path
-from typing import List, Union, Dict, Any
+from typing import List, Union, Dict, Any, Optional
 
 import typer
 
@@ -51,7 +51,7 @@ def count_structure_items(structure: Dict[str, Any]) -> int:
                 count += count_structure_items(content)
     return count
 
-def create_structure_recursive(base_path: Path, structure: Dict[str, Any], progress: Union[None, typer.models.ProgressBar] = None):
+def create_structure_recursive(base_path: Path, structure: Dict[str, Any], progress: Optional[Any] = None):
     """Parcourt récursivement le dictionnaire pour créer dossiers et fichiers.
 
     Le schema accepté est flexible :
@@ -182,7 +182,7 @@ def scaffold(
         with typer.progressbar(length=total, label="Génération") as progress:
             create_structure_recursive(root_path, structure, progress)
             # ensure progress is complete
-            remaining = total - progress.current
+            remaining = total - getattr(progress, "current", 0)
             if remaining > 0:
                 progress.update(remaining)
 
